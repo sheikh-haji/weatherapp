@@ -2,7 +2,10 @@ const express=require("express");
 const https=require("https");
 const bodyparser=require("body-parser");
 app=express();
-app.listen(3000,function(){console.log("yes i am listenning at 3000")});
+// app.listen(3000,function(){console.log("yes i am listenning at 3000")});
+app.listen(process.env.PORT || 3000, function(){
+console.log("Server is running in port 3000")
+});
 
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.static("public"))
