@@ -20,6 +20,10 @@ app.post("/",function(req,res){
   const url="https://api.openweathermap.org/data/2.5/weather?q="+query+"&appid="+apikey+"&units="+units;
   https.get(url,function(response){
   console.log(response.statusCode);
+  if(response.statusCode!==200){
+    res.send("Opps sorry somethings wrong");
+  }
+  else{
   response.on("data",function(data){
     // console.log(data);
     const weatherData=JSON.parse(data);
@@ -38,7 +42,8 @@ app.post("/",function(req,res){
     res.write("<h2>The weather is "+des+"</h2>");
     res.write("<img src=\""+imgpath+"\">");
     res.send();
-  });
+  }
+);}
   });
 })
 
