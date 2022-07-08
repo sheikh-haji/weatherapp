@@ -23,8 +23,8 @@ app.post("/",function(req,res){
   response.on("data",function(data){
     // console.log(data);
     const weatherData=JSON.parse(data);
-    temper=weatherData.main.temp;
-    des=weatherData.weather[0].main;
+    const temper=weatherData.main.temp;
+    const des=weatherData.weather[0].main;
     console.log(weatherData.name);
     const part=weatherData.weather[0].icon;
     var imgpath="https://openweathermap.org/img/wn/";
