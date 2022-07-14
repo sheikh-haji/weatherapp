@@ -5,15 +5,73 @@
     <title>Success</title>
     <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
+      <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+/* body { margin: 0; padding: 0; } */
+#map { position:fixed;
+   top: 60%;
+   left: 50%;
+   width:30em;
+   height:18em;
+   margin-top: -9em; /*set to a negative number 1/2 of your height*/
+   margin-left: -15em; /*set to a negative number 1/2 of your width*/
+   border: 1px solid #ccc;
+   background-color: #f3f3f3; }
+</style>
   </head>
-  <body>
-    <div class="jumbotron jumbotron-fluid">
+  <body class="jumbotron jumbotron-fluid">
+    <div >
     <div class="container">
+      <!-- <input type="hidden" id="fname" value=<%= city %>></input> -->
         <h1 class="display-4">The Temperature in <%= city %> is <%= temperature %> `C </h1>
         <p class="lead">The Weather is <%= description%> </p>
         <img src=<%= image %> ></img>
     </div>
 </div>
+<script src='https://unpkg.com/mapbox@1.0.0-beta9/dist/mapbox-sdk.min.js'></script>
+
+<style>
+#geocoder-container > div {
+min-width: 50%;
+margin-left: 25%;
+}
+</style>
+<div id='map' style='width: 400px; height: 300px;'></div>
+   <input type="hidden" id="fname" value=<%=city%>></input>
+   <script>
+     mapboxgl.accessToken ="pk.eyJ1Ijoic2hlaWtoMTE4IiwiYSI6ImNsNWtwaWJlbjBhaTEzcGp2M21vYXk0amEifQ.WWwrnJ23ZEs7RsEGY5Ywig";
+
+   // console.log(mapboxgl.accessToken);
+   const element = document.getElementById("fname");
+ console.log(element.getAttributeNode("value").value);
+   var client = new MapboxClient(mapboxgl.accessToken);
+   // console.log(client);
+
+   var address = element.getAttributeNode("value").value;
+  // console.log(address);
+   var test = client.geocodeForward(address, function(err, data, res) {
+     // data is the geocoding result as parsed JSON
+     // res is the http response, including: status, headers and entity properties
+
+     console.log(res);
+     console.log(res.url);
+     console.log(data);
+
+     var coordinates = data.features[0].center;
+
+     var map = new mapboxgl.Map({
+       container: 'map',
+       style: 'mapbox://styles/mapbox/streets-v10',
+       center: coordinates,
+       zoom: 10
+     });
+     new mapboxgl.Marker()
+       .setLngLat(coordinates)
+       .addTo(map);
+
+
+   });
+   </script>
   </body>
 </html>
