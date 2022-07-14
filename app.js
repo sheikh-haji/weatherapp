@@ -17,7 +17,7 @@ app.get("/",function(req,res){
 
 });
 app.post("/",function(req,res){
-  const query=_.capitalize(req.body.cityholder);
+  var query=_.capitalize(req.body.cityholder);
 
   const apikey="bcc8854a89200f1c4978826c42cbe10e";
   const units="metric";
@@ -34,7 +34,7 @@ app.post("/",function(req,res){
     const temper=weatherData.main.temp;
     const des=_.capitalize(weatherData.weather[0].main);
 
-    console.log(weatherData.name);
+    query=weatherData.name
     const part=weatherData.weather[0].icon;
     var imgpath="https://openweathermap.org/img/wn/";
     imgpath=imgpath+part;
