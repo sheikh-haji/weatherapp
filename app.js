@@ -92,7 +92,7 @@ app.post("/",function(req,res){
   https.get(url,function(response){
   console.log(response.statusCode);
   if(response.statusCode!==200){
-    res.render("failure");
+    res.render("location1");
   }
   else{
   response.on("data",function(data){
