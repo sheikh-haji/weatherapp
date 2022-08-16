@@ -2,6 +2,7 @@ const express=require("express");
 const https=require("https");
 const bodyparser=require("body-parser");
 const _=require("lodash");
+var geolocation = require('geolocation')
 // const ejs=require("ejs")
 app=express();
 // app.listen(3000,function(){console.log("yes i am listenning at 3000")});
@@ -12,10 +13,76 @@ console.log("Server is running in port 3000")
 app.set("view engine","ejs");
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.static("public"))
-app.get("/",function(req,res){
-    res.render("list",{item1:"",item2:"",item3:""})
 
+app.get("/current",function(req,res){
+  res.render("location");
+})
+app.post("/current",function(req,res){
+  var long=req.body.long;
+    var lat=req.body.lat;
+    if(long==="0" && long==="0"){
+      res.render("location1");
+    }
+    else{
+
+        const apikey="bcc8854a89200f1c4978826c42cbe10e";
+        const units="metric";
+        const url="https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&appid="+apikey+"&units="+units;
+        https.get(url,function(response){
+        console.log(response.statusCode);
+        if(response.statusCode!==200){
+          res.render("failure");
+        }
+        else{
+        response.on("data",function(data){
+          // console.log(data);
+          const weatherData=JSON.parse(data);
+          const temper=weatherData.main.temp;
+          const des=_.capitalize(weatherData.weather[0].main);
+
+          query=weatherData.name
+          const part=weatherData.weather[0].icon;
+          var sunrise=weatherData.sys.sunrise;
+          sunrise= new Date(sunrise*1000).toLocaleTimeString("en-US");
+          var sunset=weatherData.sys.sunset;
+          sunset= new Date(sunset*1000).toLocaleTimeString("en-US");
+
+          // console.log("pressure of"+query+" "+weatherData.main.pressure);
+          // https://openweathermap.org/img/wn/03d@2x.png
+          console.log(weatherData.weather[0].id);
+           var imgpath="https://openweathermap.org/img/wn/";
+           imgpath=imgpath+part;
+           imgpath=imgpath+"@2x.png";
+           console.log(imgpath);
+           var message=getMessage(temper);
+
+        //   res.write("<h1>the temperature in "+query+" is "+temper+" `C</h1>");
+        //   res.write("<h2>The weather is "+des+"</h2>");
+        //   res.write("<img src=\""+imgpath+"\">");
+        //   res.send();
+
+           res.render("location2",{city:query,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
+        }
+      );}
+        });
+    }
+
+})
+app.get("/",function(req,res){
+
+  res.render("index");
 });
+function getMessage(temp) {
+   if (temp > 25) {
+     return 'It\'s 🍦 time';
+   } else if (temp > 20) {
+     return 'It\'s 👕,🩳time';
+   } else if (temp < 10) {
+     return 'It\'s 🧣🧤time';
+   } else {
+     return 'It\'s 🧥 time';
+   }
+ }
 app.post("/",function(req,res){
   var query=_.capitalize(req.body.cityholder);
 
@@ -36,48 +103,104 @@ app.post("/",function(req,res){
 
     query=weatherData.name
     const part=weatherData.weather[0].icon;
-    var imgpath="https://openweathermap.org/img/wn/";
-    imgpath=imgpath+part;
-    imgpath=imgpath+"@2x.png";
-    console.log(imgpath);
+    var sunrise=weatherData.sys.sunrise;
+    sunrise= new Date(sunrise*1000).toLocaleTimeString("en-US");
+    var sunset=weatherData.sys.sunset;
+    sunset= new Date(sunset*1000).toLocaleTimeString("en-US");
 
-    // res.write("<h1>the temperature in "+query+" is "+temper+" `C</h1>");
-    // res.write("<h2>The weather is "+des+"</h2>");
-    // res.write("<img src=\""+imgpath+"\">");
-    // res.send();
+    // console.log("pressure of"+query+" "+weatherData.main.pressure);
+    // https://openweathermap.org/img/wn/03d@2x.png
+    console.log(weatherData.weather[0].id);
+     var imgpath="https://openweathermap.org/img/wn/";
+     imgpath=imgpath+part;
+     imgpath=imgpath+"@2x.png";
+     console.log(imgpath);
+     var message=getMessage(temper);
 
-    res.render("success",{city:query,temperature:temper,description:des,image:imgpath});
+  //   res.write("<h1>the temperature in "+query+" is "+temper+" `C</h1>");
+  //   res.write("<h2>The weather is "+des+"</h2>");
+  //   res.write("<img src=\""+imgpath+"\">");
+  //   res.send();
+
+     res.render("data",{city:query,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
   }
 );}
   });
-})
-app.post("/failure",function(req,res){
-  res.redirect("/");
 });
 
-// const query="avadi,chennai,tamilnadu";
-// const apikey="bcc8854a89200f1c4978826c42cbe10e";
-// const units="metric";
-// const url="https://api.openweathermap.org/data/2.5/weather?q="+query+"&appid="+apikey+"&units="+units;
-// https.get(url,function(response){
-// console.log(response.statusCode);
-// response.on("data",function(data){
-//   // console.log(data);
-//   const weatherData=JSON.parse(data);
-//   temper=weatherData.main.temp;
-//   des=weatherData.weather[0].main;
-//   console.log(weatherData.name);
-//   const part=weatherData.weather[0].icon;
-//   var imgpath="https://openweathermap.org/img/wn/";
-//   imgpath=imgpath+part;
-//   imgpath=imgpath+"@2x.png";
-//   console.log(imgpath);
-//   // const temp2={name:"sheikh ameenul haji",
-//   //              address:"avadi,chennai"};
-//   //              console.log(JSON.stringify(temp2));
-//   res.write("<h1>the temperature in Avadi,Chennai is "+temper+" `C</h1>");
-//   res.write("<h2>The weather is "+des+"</h2>");
-//   res.write("<img src=\""+imgpath+"\">");
-//   res.send();
+// app.get("/",function(req,res){
+//     res.render("list",{item1:"",item2:"",item3:""})
+//
 // });
+// app.get("/y",function(req,res){
+//   res.render("data");
 // });
+// https://api.openweathermap.org/data/2.5/weather?q="chennai"&appid="bcc8854a89200f1c4978826c42cbe10e"
+// app.post("/",function(req,res){
+//   var query=_.capitalize(req.body.cityholder);
+//
+//   const apikey="bcc8854a89200f1c4978826c42cbe10e";
+//   const units="metric";
+//   const url="https://api.openweathermap.org/data/2.5/weather?q="+query+"&appid="+apikey+"&units="+units;
+//   https.get(url,function(response){
+//   console.log(response.statusCode);
+//   if(response.statusCode!==200){
+//     res.render("failure");
+//   }
+//   else{
+//   response.on("data",function(data){
+//     // console.log(data);
+//     const weatherData=JSON.parse(data);
+//     const temper=weatherData.main.temp;
+//     const des=_.capitalize(weatherData.weather[0].main);
+//
+//     query=weatherData.name
+//     const part=weatherData.weather[0].icon;
+//     // console.log("pressure of"+query+" "+weatherData.main.pressure);
+//     // https://openweathermap.org/img/wn/03d@2x.png
+//     console.log(weatherData.weather[0].id);
+//      var imgpath="https://openweathermap.org/img/wn/";
+//      imgpath=imgpath+part;
+//      imgpath=imgpath+"@2x.png";
+//      console.log(imgpath);
+//
+//   //   res.write("<h1>the temperature in "+query+" is "+temper+" `C</h1>");
+//   //   res.write("<h2>The weather is "+des+"</h2>");
+//   //   res.write("<img src=\""+imgpath+"\">");
+//   //   res.send();
+//
+//      res.render("success",{city:query,temperature:temper,description:des,image:imgpath});
+//   }
+// );}
+//   });
+// })
+// app.post("/failure",function(req,res){
+//   res.redirect("/");
+// });
+//
+// // const query="avadi,chennai,tamilnadu";
+// // const apikey="bcc8854a89200f1c4978826c42cbe10e";
+// // const units="metric";
+// // const url="https://api.openweathermap.org/data/2.5/weather?q="+query+"&appid="+apikey+"&units="+units;
+// // https.get(url,function(response){
+// // console.log(response.statusCode);
+// // response.on("data",function(data){
+// //   // console.log(data);
+// //   const weatherData=JSON.parse(data);
+// //   temper=weatherData.main.temp;
+// //   des=weatherData.weather[0].main;
+// //   console.log(weatherData.name);
+// //   const part=weatherData.weather[0].icon;
+// //   var imgpath="https://openweathermap.org/img/wn/";
+// //   imgpath=imgpath+part;
+// //   imgpath=imgpath+"@2x.png";
+// //   console.log(imgpath);
+// //   // const temp2={name:"sheikh ameenul haji",
+// //   //              address:"avadi,chennai"};
+// //   //              console.log(JSON.stringify(temp2));
+// //   res.write("<h1>the temperature in Avadi,Chennai is "+temper+" `C</h1>");
+// //   res.write("<h2>The weather is "+des+"</h2>");
+// //   res.write("<img src=\""+imgpath+"\">");
+// //   res.send();
+// // });
+// // });

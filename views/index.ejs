@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Weather App</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<!-- css -->
+<link rel="stylesheet" href="css/styles.css">
+<!-- fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto+Flex:opsz@8..144&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  </head>
+  <body>
+      <nav class="navbar navbar-expand-md nav-light" style="background-color:#e06666;">
+        <span>
+          <a class="navbar-brand ms-3" style="color:white;font-family:Pacifico;font-size:1.5rem;">
+             <img src="images/temp2.jpg"  width="7%" height="7%" class="my-auto me-1">Weather App</a>
+             <button class="navbar-toggler float-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+             </button>
+        </span>
+
+
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+     <ul class="navbar-nav ms-auto me-3" >
+       <li class="nav-item px-3 mx-2">
+         <a class="nav-link" href="/current" style="color:white;font-family:Roboto Flex;font-size:1rem;">Current Weather</a>
+       </li>
+       <li class="nav-item px-3 mx-2">
+         <a class="nav-link" href="/" style="color:white;font-family:Roboto Flex;font-size:1rem;">City Weather</a>
+       </li>
+     </ul>
+   </div>
+
+      </nav>
+      <main class="form-signin w-100 mx-auto my-auto text-center pt-5">
+
+        <form action="/" method="post" class="pt-5">
+          <img class="mb-4" src="/images/temp4.png" alt="" width="72" height="57">
+          <h1 class="h3 mb-3 fw-normal"  style="font-family:Source Sans Pro;">Weather</h1>
+
+          <div class="form-floating">
+            <input type="text" class="form-control typeahead" name="cityholder" id="floatingInput" placeholder="xyz" >
+            <label for="floatingInput" style="font-family:Source Sans Pro;text-align:left;">Enter City Name</label>
+          </div>
+
+
+          <!-- <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div> -->
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Go</button>
+
+        </form>
+      </main>
+      <section id="footer">
+        <div class="container " >
+          <p class="mt-3" >© Ceg,Chennai</p>
+        </div>
+      </section>
+
+  </body>
+</html>

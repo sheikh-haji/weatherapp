@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Weather App</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<!-- css -->
+<link rel="stylesheet" href="css/styles.css">
+<!-- fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Collegiate+One&family=DynaPuff&family=Kanit&family=Pacifico&family=Playfair+Display:wght@700&family=Roboto+Flex:opsz@8..144&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+<!-- mapbox -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+<script src='https://unpkg.com/mapbox@1.0.0-beta9/dist/mapbox-sdk.min.js'></script>
+
+
+  </head>
+  <body >
+
+      <nav class="navbar navbar-expand-md nav-light" style="background-color:#e06666;">
+        <span>
+          <a class="navbar-brand ms-3" style="color:white;font-family:Pacifico;font-size:1.5rem;">
+             <img src="images/temp2.jpg"  width="7%" height="7%" class="my-auto me-1">Weather App</a>
+             <button class="navbar-toggler float-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+             </button>
+        </span>
+
+
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+     <ul class="navbar-nav ms-auto me-3" >
+       <li class="nav-item px-3 mx-2">
+         <a class="nav-link" href="/current" style="color:white;font-family:Roboto Flex;font-size:1rem;">Current Weather</a>
+       </li>
+       <li class="nav-item px-3 mx-2" >
+         <a class="nav-link" href="/" style="color:white;font-family:Roboto Flex;font-size:1rem;">City Weather</a>
+       </li>
+     </ul>
+   </div>
+
+      </nav>
+      <div class="container" style="height:80%;" >
+     <div class="row" >
+      <h1 style="font-family:Kanit;text-align:center;font-size:2.5rem;margin:3% 0%;text-decoration: underline;"><%= city%> (<%=message%>)</h1>
+       <div class="col-lg-6 col-md-12 " style="padding-left:5%; margin-bottom:30px;">
+
+                  <div class="card h-90 w-100 p-auto" >
+
+          <div class="card-body">
+            <h4 class="card-title" style="text-align:center;font-size:2.0rem;font-family:Roboto;;text-decoration: underline;">
+                     Weather
+            </h4>
+            <p style="font-family:Playfair;text-align:left;font-size:2.0rem;margin:3%0%;" class="card-text">Description:It's <%=description%> <img src=<%=image%>  width="7%" height="7%" class="my-auto me-1"></p>
+               <p style="font-family:Playfair;text-align:left;font-size:2.0rem;margin:3%0%;"class="card-text">Temperature:<%=temperature%>`C</p>
+                  <p style="font-family:Playfair;text-align:left;font-size:2.0rem;margin:3%0%;" class="card-text">Sunrise:<%=sunrise%></p>
+                     <p style="font-family:Playfair;text-align:left;font-size:2.0rem;margin-top:3%;margin-bottom:5%;" class="card-text">Sunset:<%=sunset%></p>
+            </div>
+        </div>
+
+
+
+       </div>
+
+       <div class="col-lg-6 col-md-12 "  >
+
+
+
+              <!-- <h1 style="font-family:Pacifico;text-align:center;font-size:2rem;margin:5%0%;font-weight:normal" onclick="func(event)"> -->
+                <!-- <a href="https://avadicrpf.kvs.ac.in/" target="_blank" style="text-decoration:none;color:black;" >Kendriya Vidyalaya,Avadi</a></h1> -->
+             <div id='map1'  style="margin-left: 5%;width:90%; height: 330px;padding: auto;text-align:center;  margin-bottom:30px;"></div>
+              <input type="hidden" id="fname" value=<%=city%>></input>
+
+
+       </div>
+
+     </div>
+     </div>
+     <script>
+
+       mapboxgl.accessToken ="pk.eyJ1Ijoic2hlaWtoMTE4IiwiYSI6ImNsNWtwaWJlbjBhaTEzcGp2M21vYXk0amEifQ.WWwrnJ23ZEs7RsEGY5Ywig";
+       // console.log(mapboxgl.accessToken);
+       const element = document.getElementById("fname");
+     console.log(element.getAttributeNode("value").value);
+       var client = new MapboxClient(mapboxgl.accessToken);
+       // console.log(client);
+
+       var address = element.getAttributeNode("value").value;
+      // console.log(address);
+       var test = client.geocodeForward(address, function(err, data, res) {
+         // data is the geocoding result as parsed JSON
+         // res is the http response, including: status, headers and entity properties
+
+         console.log(res);
+         console.log(res.url);
+         console.log(data);
+
+         var coordinates = data.features[0].center;
+
+         var map = new mapboxgl.Map({
+           container: 'map1',
+           style: 'mapbox://styles/mapbox/streets-v10',
+           center: coordinates,
+           zoom: 10,
+  "icon-size": ['interpolate', ['linear'], ['zoom'], 10, 1, 15, 0.5],
+         });
+         new mapboxgl.Marker({ color: 'red', rotation: -10 })
+           .setLngLat(coordinates)
+           .addTo(map);
+
+
+       });
+
+ </script>
+
+<div class="my_container">
+
+</div>
+
+
+      <section id="footer">
+        <div class="container footer" >
+          <p class="mt-3" >© Ceg,Chennai</p>
+        </div>
+      </section>
+
+  </body>
+</html>
