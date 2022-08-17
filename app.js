@@ -74,13 +74,13 @@ app.get("/",function(req,res){
 });
 function getMessage(temp) {
    if (temp > 25) {
-     return 'It\'s 🍦 time';
+     return 'It\'s🍦time';
    } else if (temp > 20) {
-     return 'It\'s 👕,🩳time';
+     return 'It\'s👕,🩳time';
    } else if (temp < 10) {
-     return 'It\'s 🧣🧤time';
+     return 'It\'s🧣🧤time';
    } else {
-     return 'It\'s 🧥 time';
+     return 'It\'s🧥time';
    }
  }
 app.post("/",function(req,res){
