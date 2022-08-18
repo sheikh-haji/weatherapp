@@ -1,4 +1,5 @@
 const express=require("express");
+const mongoose=require("mongoose");
 const https=require("https");
 const bodyparser=require("body-parser");
 const _=require("lodash");
@@ -6,6 +7,7 @@ var geolocation = require('geolocation')
 // const ejs=require("ejs")
 app=express();
 // app.listen(3000,function(){console.log("yes i am listenning at 3000")});
+
 app.listen(process.env.PORT || 3000, function(){
 console.log("Server is running in port 3000")
 });
@@ -13,7 +15,10 @@ console.log("Server is running in port 3000")
 app.set("view engine","ejs");
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.static("public"))
-
+// database
+mongoose.connect("mongodb+srv://sheikhhaji18:18shakila@cluster0.2akiep0.mongodb.net/CityDB?retryWrites=true&w=majority",{useNewUrlParser:true});
+const fruitSchema=new mongoose.Schema({name: { type: String  }});
+const City=new mongoose.model("cities",fruitSchema);
 app.get("/current",function(req,res){
   res.render("location");
 })
@@ -69,8 +74,24 @@ app.post("/current",function(req,res){
 
 })
 app.get("/",function(req,res){
+  var lists=[];
+  City.find(function(err,fruits){
+     if(err){
+       console.log(err);
+        res.render("index",{list:lists});
+     }
+     else{
+        for(var i=0;i<fruits.length;i++){
+          var i1=fruits[i];
+          // console.log(i1.name);
+          lists.push(i1.name);
+        }
+        console.log(lists);
+       res.render("index",{list:lists});
+     }
 
-  res.render("index");
+});
+
 });
 function getMessage(temp) {
    if (temp > 25) {
@@ -122,7 +143,8 @@ app.post("/",function(req,res){
   //   res.write("<img src=\""+imgpath+"\">");
   //   res.send();
 
-     res.render("data",{city:query,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
+   res.render("data",{city:query,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
+
   }
 );}
   });
