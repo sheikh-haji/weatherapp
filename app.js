@@ -47,10 +47,10 @@ app.post("/current",function(req,res){
 
           query=weatherData.name
           const part=weatherData.weather[0].icon;
-          var sunrise=weatherData.sys.sunrise;
-          sunrise= new Date(sunrise*1000).toLocaleTimeString("en-US");
-          var sunset=weatherData.sys.sunset;
-          sunset= new Date(sunset*1000).toLocaleTimeString("en-US");
+          var sunrise=convertTime(weatherData.sys.sunrise,weatherData.timezone);
+
+          var sunset=convertTime(weatherData.sys.sunset,weatherData.timezone);
+
 
           // console.log("pressure of"+query+" "+weatherData.main.pressure);
           // https://openweathermap.org/img/wn/03d@2x.png
@@ -93,6 +93,17 @@ app.get("/",function(req,res){
 });
 
 });
+function convertTime(unixTime, offset){
+    let date = new Date((unixTime+offset) * 1000);
+    var hours = date.getUTCHours();
+ var minutes = date.getUTCMinutes();
+ var ampm = hours >= 12 ? 'PM' : 'AM';
+ hours = hours % 12;
+ hours = hours ? hours : 12; // the hour '0' should be '12'
+ minutes = minutes < 10 ? '0'+minutes : minutes;
+ var strTime = hours + ':' + minutes + ' ' + ampm;
+ return strTime;
+}
 function getMessage(temp) {
    if (temp > 25) {
      return 'It\'s🍦time';
@@ -124,10 +135,9 @@ app.post("/",function(req,res){
 
     query=weatherData.name
     const part=weatherData.weather[0].icon;
-    var sunrise=weatherData.sys.sunrise;
-    sunrise= new Date(sunrise*1000).toLocaleTimeString("en-US");
-    var sunset=weatherData.sys.sunset;
-    sunset= new Date(sunset*1000).toLocaleTimeString("en-US");
+    var sunrise=convertTime(weatherData.sys.sunrise,weatherData.timezone);
+
+    var sunset=convertTime(weatherData.sys.sunset,weatherData.timezone);
 
     // console.log("pressure of"+query+" "+weatherData.main.pressure);
     // https://openweathermap.org/img/wn/03d@2x.png
