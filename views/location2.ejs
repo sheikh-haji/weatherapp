@@ -71,6 +71,8 @@
                 <!-- <a href="https://avadicrpf.kvs.ac.in/" target="_blank" style="text-decoration:none;color:black;" >Kendriya Vidyalaya,Avadi</a></h1> -->
              <div id='map1'  style="margin-left: 5%;width:90%; height: 330px;padding: auto;text-align:center;  margin-bottom:30px;"></div>
               <input type="hidden" id="fname" value=<%=city%>></input>
+              <input type="hidden" id="lat" value=<%=lat%>></input>
+              <input type="hidden" id="long" value=<%=long%>></input>
 
 
        </div>
@@ -83,10 +85,17 @@
        // console.log(mapboxgl.accessToken);
        const element = document.getElementById("fname");
      console.log(element.getAttributeNode("value").value);
+
        var client = new MapboxClient(mapboxgl.accessToken);
        // console.log(client);
 
        var address = element.getAttributeNode("value").value;
+       var lat=document.getElementById("lat");
+       var lat1=lat.getAttributeNode("value").value;
+       var long=document.getElementById("long");
+       var long1=document.getElementById("long").value;
+       console.log(long1);
+       console.log(lat1);
       // console.log(address);
        var test = client.geocodeForward(address, function(err, data, res) {
          // data is the geocoding result as parsed JSON
@@ -96,7 +105,7 @@
          console.log(res.url);
          console.log(data);
 
-         var coordinates = data.features[0].center;
+         var coordinates = [long1,lat1];
 
          var map = new mapboxgl.Map({
            container: 'map1',
@@ -106,9 +115,21 @@
   "icon-size": ['interpolate', ['linear'], ['zoom'], 10, 1, 15, 0.5],
          });
          new mapboxgl.Marker({ color: 'red', rotation: -10 })
-           .setLngLat(coordinates)
+           .setLngLat([long1,lat1])
            .addTo(map);
-
+           const geolocate = new mapboxgl.GeolocateControl({
+ positionOptions: {
+ enableHighAccuracy: true
+ },
+ trackUserLocation: true
+ });
+ // Add the control to the map.
+ map.addControl(geolocate);
+ // Set an event listener that fires
+ // when a geolocate event occurs.
+ geolocate.on('geolocate', () => {
+ console.log('A geolocate event has occurred.');
+ });
 
        });
 

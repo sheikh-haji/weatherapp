@@ -36,7 +36,7 @@
         function(p){
                  noGeolocation();
                  document.getElementById("myForm").submit();
-        }
+        },{timeout: 9000, maximumAge: 0, enableHighAccuracy: true}
       )
     }
   }

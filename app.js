@@ -66,7 +66,7 @@ app.post("/current",function(req,res){
         //   res.write("<img src=\""+imgpath+"\">");
         //   res.send();
 
-           res.render("location2",{city:query,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
+           res.render("location2",{city:query,lat:lat,long:long,temperature:temper,description:des,image:imgpath,sunrise:sunrise,sunset:sunset,message:message});
         }
       );}
         });
